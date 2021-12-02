@@ -437,7 +437,10 @@ class SawyerXYZEnv(SawyerMocapBase, metaclass=abc.ABCMeta):
             return self._last_stable_obs
 
         reward, info = self.evaluate_state(self._last_stable_obs, action)
-        return self._last_stable_obs, reward, False, info
+        done = False
+        if self.curr_path_length > self.max_path_length:
+            done = True
+        return self._last_stable_obs, reward, done, info
 
     def evaluate_state(self, obs, action):
         """Does the heavy-lifting for `step()` -- namely, calculating reward
